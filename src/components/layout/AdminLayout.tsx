@@ -1,7 +1,7 @@
 import { Layout, Menu, MenuProps } from 'antd';
 import { NavLink, Outlet } from 'react-router-dom';
-import { useAppDispatch } from '../../redux/hook';
-import { logOut } from '../../redux/features/auth/authSlice';
+import { useAppDispatch, useAppSelector } from '../../redux/hook';
+import { logOut, useCurrentToken } from '../../redux/features/auth/authSlice';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -14,31 +14,56 @@ export default function AdminLayout() {
     dispatch(logOut())
   }
 
+  const token = useAppSelector(useCurrentToken);
+
   const items: MenuItem[] = [
     {
       label: <NavLink to={'/admin/dashboard'}>Dashboard</NavLink>,
       key: 'dashboard',
     },
     {
-      label: <NavLink to={'/admin/shop'}>Shop</NavLink>,
-        key: 'shop',
+      label: <NavLink to={'/admin/manage-user'}>Manage user</NavLink>,
+        key: 'manageuser',
     },
     {
-      label: <NavLink to={'/login'}>Login</NavLink>,
-        key: 'login',
+      label: <NavLink to={'/admin/manage-product'}>Manage product</NavLink>,
+        key: 'manageproduct',
     },
     {
-      label: <NavLink to={'/signup'}>Signup</NavLink>,
-        key: 'Signup',
+      label: <NavLink to={'/admin/manage-order'}>Manage order</NavLink>,
+        key: 'manageorder',
     },
-    {
-      label: <span onClick={handleLogout}>Logout</span>,
-        key: 'logout',
-    },
+    // {
+    //   label: <NavLink to={'/shop'}>Shop</NavLink>,
+    //     key: 'shop',
+    // }
   ];
 
+  if (!token) {
+    items.push(
+      {
+        label: <NavLink to={'/login'}>Login</NavLink>,
+        key: 'login',
+      },
+      {
+        label: <NavLink to={'/signup'}>Signup</NavLink>,
+        key: 'signup',
+      }
+    );
+  }
+  if (token) {
+    items.push(
+      {
+        label: <span onClick={handleLogout}>Logout</span>,
+          key: 'logout',
+      },
+    );
+  }
+
+  
+
   return (
-    <Layout>
+    <Layout style={{height: '100%'}}>
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
@@ -48,8 +73,23 @@ export default function AdminLayout() {
         onCollapse={(collapsed, type) => {
           console.log(collapsed, type);
         }}
+        style={{ height: '100vh', position: 'sticky', top: '0', left: '0' }}
       >
-        <div className="demo-logo-vertical" />
+        
+        <div className="top-header" style={{
+          width: '100%',
+          background: '#722ed1',
+          height: '120px',
+          padding: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <NavLink to={'/home'} style={{ cursor: 'pointer' }}>
+              <img src="/carnest-logo.png" alt="Logo" style={{ width: '100%',filter: 'invert(1)', objectFit: 'cover' }} />
+          </NavLink>
+        </div>
+        
         <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
       </Sider>
       <Layout>
@@ -57,7 +97,7 @@ export default function AdminLayout() {
         <Content style={{ margin: '24px 16px 0' }}>
           <div
             style={{
-              padding: 24,
+              padding: 8,
               minHeight: 360,
             }}
           >

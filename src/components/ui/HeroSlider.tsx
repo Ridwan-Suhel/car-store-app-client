@@ -32,14 +32,17 @@ export default function HeroSlider() {
     beforeChange={() => {
         setAnimate(false); // Reset animation
         setTimeout(() => setAnimate(true), 50); // Reapply animation
-      }}>
+      }}
+      className="slider-main"
+      >
         {heroItems.map((item, index) => (
             <div key={index}>
                 <div className={`slider ${index === 1 ? "slider-2" : "slider-1"}`}>
                     <div className="container">
                     <Row>
-                        <Col md={24} lg={12}>
+                        <Col sm={24} md={24} lg={12}>
                             <div className="content-wrapper" style={{marginTop: '50px'}}>
+                                <div>
                                 <h2 className="headline">{item.title}</h2>
                                 <p className="sub-headline">{item.description}</p>
                                 <Card style={{ width: 350 }}>
@@ -50,9 +53,10 @@ export default function HeroSlider() {
                                         Shop now
                                     </Button>
                                 </Card>
+                                </div>
                             </div>
                         </Col>
-                        <Col md={24} lg={12}>
+                        <Col className="right-col" sm={24} md={24} lg={12}>
                             <div className={`slider-object ${animate ? "animate-img" : ""}`}>
                                 <img src="car-1.png" alt="Car" />
                             </div>

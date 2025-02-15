@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import '../styles/login.css'
+import '../styles/login.css';
 import { Form, Input, Button, Typography, Card } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { useAppDispatch } from '../redux/hook';
 import { setUser } from '../redux/features/auth/authSlice';
 import { verifyToken } from '../utils/verifyToken';
 import { TUser } from '../utils/Type';
+import { toast } from 'sonner'; // Import sonner for toast notifications
 
 const { Title, Text } = Typography;
 
@@ -15,17 +16,40 @@ export default function LoginForm () {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [login, { error }] = useLoginMutation();
-  console.log('Error => ', error)
+  const [login] = useLoginMutation();
 
   const onFinish = async (values: any) => {
-    const res = await login(values).unwrap();
-    const user = verifyToken(res?.data?.token) as TUser;
-    console.log(user?.role)
-    dispatch(setUser({user, token: res.data.token}));
-    navigate(`${user?.role === 'user' ? '/' : '/admin/dashboard'}`)
+    try {
+      const res = await login(values).unwrap();
+      const user = verifyToken(res?.data?.token) as TUser;
+      dispatch(setUser({user, token: res.data.token}));
+      navigate(`${user?.role === 'user' ? '/' : '/admin/dashboard'}`);
+    } catch (err: any) {
+      console.log(err)
+      // Error handling
+      if (err?.data || err?.data?.message) {
+        console.log(err?.data?.message)
+        toast.error(err?.data?.message || "An unexpected error occurred.", {
+          duration: 5000,
+          position: 'bottom-center',
+          style: {
+            backgroundColor: 'red',
+            color: 'white',
+          },  
+        });
+      } else {
+        toast.error("Login failed. Please try again.", {
+          duration: 5000,
+          position: 'bottom-center',
+          style: {
+            backgroundColor: 'red',
+            color: 'white',
+          },  
+        });
+      }
+    }
   };
-  
+
   return (
     <div className="card-container">
       <Card className="form-card">

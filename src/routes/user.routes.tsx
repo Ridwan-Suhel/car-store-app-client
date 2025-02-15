@@ -1,9 +1,11 @@
+import ProtectedRoute from "../components/layout/ProtectedRoute";
 import About from "../pages/about";
 import Blog from "../pages/Blog";
 import BlogDetails from "../pages/BlogDetails";
 import Checkout from "../pages/Checkout";
 // import Contact from "../pages/contact";
 import Home from "../pages/Home";
+import MyAccount from "../pages/MyAccount";
 import OrderDetails from "../pages/OrderDetails";
 import ProductDetails from "../pages/ProductDetails";
 import Shop from "../pages/Shop";
@@ -43,13 +45,16 @@ const userRoutes = [
     },
     {
         path: 'checkout',
-        element: <Checkout />
+        element: <ProtectedRoute><Checkout /></ProtectedRoute>
     },
     {
         path: 'order/details',
-        element: <OrderDetails />
+        element: <ProtectedRoute><OrderDetails /></ProtectedRoute>
     },
-    
+    {
+        path: '/my-account/:id',
+        element: <ProtectedRoute> <MyAccount /> </ProtectedRoute>,
+    },
 ]
 
 

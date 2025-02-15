@@ -4,7 +4,7 @@ import { Button, Drawer, Layout, Menu, MenuProps } from "antd";
 import { UnorderedListOutlined } from "@ant-design/icons";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { logOut, useCurrentToken } from "../../redux/features/auth/authSlice";
+import { logOut, useCurrentToken, useCurrentUser } from "../../redux/features/auth/authSlice";
 import FooterSection from "../ui/FooterSection";
 
 const { Content } = Layout;
@@ -19,6 +19,11 @@ export default function MainLayout() {
   const handleLogout = () => {
     dispatch(logOut());
     navigate('/login')
+  }
+
+  const user: any = useAppSelector(useCurrentUser);
+  const myAccount = () => {
+    navigate(`/my-account/${user?.id}`)
   }
 
   const items: MenuItem[] = [
@@ -56,9 +61,13 @@ if (!token) {
 if (token) {
   items.push(
     {
+      label: <span onClick={myAccount}>My account</span>,
+        key: 'my-account',
+    },
+    {
       label: <span onClick={handleLogout}>Logout</span>,
         key: 'logout',
-    },
+    }
   );
 }
 
@@ -101,12 +110,20 @@ if (token) {
             </div>
             {/* header navigation for mobile  */}
             <div className="mb-screen-nav">
+            
+            <div className="mb-screen-wrapper">
+            <NavLink to={'/home'} style={{ cursor: 'pointer' }}>
+                            <img src="/carnest-logo.png" alt="Logo" style={{ height: '40px' }} />
+                        </NavLink>
+                        
                   <Button color="purple" variant="solid" onClick={showDrawer}>
                       <UnorderedListOutlined />
                   </Button>
-                  <Drawer title="Basic Drawer" onClose={onClose} open={open}>
+            </div>
+
+                  <Drawer title="Carnest" onClose={onClose} className="mb-drawer" open={open}>
                   {items.map((item: any, index) => (
-                      <p key={index}>{item.label}</p>
+                      <p onClick={onClose} key={index}>{item.label}</p>
                   ))}
                   </Drawer>
             </div>

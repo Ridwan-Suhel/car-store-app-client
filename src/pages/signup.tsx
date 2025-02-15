@@ -1,13 +1,69 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Form, Input, Button, Typography, Card } from "antd";
 import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useSignupMutation } from "../redux/features/auth/authApi";
+// import { useAppDispatch } from "../redux/hook";
+import { toast } from "sonner";
+// import { setUser } from "../redux/features/auth/authSlice";
+// import { TUser } from "../utils/Type";
 
 const { Title, Text } = Typography;
 
 const SignupForm = () => {
-  const onFinish = (values: any) => {
+
+  const navigate = useNavigate();
+  // const dispatch = useAppDispatch();
+  const [signup] = useSignupMutation();
+
+  const onFinish = async (values: any) => {
     console.log("Success:", values);
+    try {
+      const res = await signup(values).unwrap();
+      console.log(res);
+      if(res.success){
+        toast.success(res?.message, {
+          duration: 500,
+          position: 'bottom-center',  
+        });
+        setTimeout(() => {
+          navigate('/login');
+          toast.success('Please login now to continue session', {
+            duration: 5000,
+            position: 'bottom-center', 
+            style: {
+              backgroundColor: 'green',
+              color: 'white',
+            },  
+          });
+        }, 500);
+      }
+      // dispatch(setUser({user, token: res.data.token}));
+    } catch (err: any) {
+      console.log(err)
+      // Error handling
+      if (err?.data || err?.data?.message) {
+        console.log(err?.data?.message)
+        toast.error(err?.data?.message || "An unexpected error occurred.", {
+          duration: 5000,
+          position: 'bottom-center',
+          style: {
+            backgroundColor: 'red',
+            color: 'white',
+          },  
+        });
+      } else {
+        toast.error("Signup failed. Please try again.", {
+          duration: 5000,
+          position: 'bottom-center',
+          style: {
+            backgroundColor: 'red',
+            color: 'white',
+          },  
+        });
+      }
+    }
+
   };
 
   return (

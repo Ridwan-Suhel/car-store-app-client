@@ -26,7 +26,8 @@ const Products = ({heading, showItem, showFeatured, filteredProducts, isLoading:
     );
   }
 
-  console.log(filteredProducts)
+
+  console.log('filteredProducts === from shop ', filteredProducts)
 
   let itemsToDisplay;
   if(!filteredProducts){
