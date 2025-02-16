@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { Form, Input, InputNumber, Button, Switch, Table, message, Modal, Row, Col, Select } from "antd";
+import { Form, Input, InputNumber, Button, Switch, Table, message, Modal, Row, Col, Select, Upload, UploadProps } from "antd";
 import { useCreateProductMutation, useDeleteProductMutation, useGetProductsQuery, useUpdateProductMutation } from "../../redux/features/Products/productApi";
-import { DeleteOutlined, EditOutlined, PlusSquareOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusSquareOutlined, ShoppingCartOutlined, UploadOutlined } from "@ant-design/icons";
 import { Option } from "antd/es/mentions";
 import { useNavigate } from "react-router-dom";
+
+const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/du6ohxizn/upload`;
 
 const ManageProduct = () => {
   const navigate = useNavigate();
@@ -14,7 +16,7 @@ const ManageProduct = () => {
   const [deleteProduct] = useDeleteProductMutation();
   const [editingProduct, setEditingProduct] = useState<any>(null);
 
-
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [form] = Form.useForm();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditState, setEditState] = useState(false);
@@ -24,11 +26,29 @@ const ManageProduct = () => {
   const brands = ["Ford", "Audi", "Nissan", "Tesla", "Mercedes-Benz", "BMW", "Jeep", "Peugeot", "Leapmotor"];
   const models = ["1 Series", "G-Class", "Avenger", "208 GT", "C10"];
 
-  // Open the modal
+  
+  const props: UploadProps = {
+    name: "file",
+    action: CLOUDINARY_UPLOAD_URL,
+    data: {
+      upload_preset: "carnest",
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        setFileUrl(info?.file?.response?.secure_url);
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  };
    // Open the modal for editing an existing product
-   const showModal = (product: any) => {
+   const showModal = () => {
+    // form.setFieldsValue({ inStock: true });
     setEditState(false)
-    form.setFieldsValue(product);
     setIsModalOpen(true);
   };
 
@@ -42,15 +62,21 @@ const ManageProduct = () => {
   // Handle form submission
   const onFinish = async (values: any) => {
       try {
-          if (editingProduct || isEditState) {
-          console.log(editingProduct);
+        const formData = {
+          ...values,
+          image: fileUrl, // Include uploaded file URL
+        };
+
+        if (editingProduct || isEditState) {
         // Update existing product
-        await updateProduct({ id: editingProduct?._id, payload: values }).unwrap();
+        await updateProduct({ id: editingProduct?._id, payload: formData }).unwrap();
         message.success('Product updated successfully!');
+        setFileUrl(null);
       } else {
         // Create a new product
-        await createProduct(values).unwrap();
+        await createProduct(formData).unwrap();
         message.success('Product added successfully!');
+        setFileUrl(null);
       }
       handleCancel();
       refetch(); // Refresh product list
@@ -87,7 +113,8 @@ const handleDelete = (id: any) => {
 //   showModal(record)
   const editProductClick = (record: any) => {
     setEditingProduct(record);
-    showModal(record);
+    form.setFieldsValue(record);
+    showModal();
     setEditState(true)
   }
 
@@ -145,7 +172,9 @@ const handleDelete = (id: any) => {
       <Modal 
        className="add-product-modal"
       title={isEditState ? 'Edit Product' : 'Add New Product' } open={isModalOpen} onCancel={handleCancel} footer={null}>
-        <Form form={form} layout="vertical" onFinish={onFinish}>
+        <Form form={form} layout="vertical"
+         initialValues={{ inStock: true }} 
+         onFinish={onFinish}>
           <Row gutter={[16, 16]}>
             <Col xs={24} sm={24} lg={12}>
                 <Form.Item name="name" label="Product Name" rules={[{ required: true, message: "Enter product name" }]}>
@@ -235,9 +264,13 @@ const handleDelete = (id: any) => {
           </Col>
           
           <Col xs={24} sm={24} lg={12}>
-          <Form.Item name="image" label="Image URL">
+          {/* <Form.Item name="image" label="Image URL">
             <Input placeholder="Enter image URL" />
-          </Form.Item>
+          </Form.Item> */}
+          <p style={{marginBottom: '8px'}}>Upload Product Image</p>
+          <Upload {...props}>
+            <Button icon={<UploadOutlined />}>Click to Upload</Button>
+          </Upload>
           </Col>
           
           <Col xs={24} sm={24} lg={24}>

@@ -7,6 +7,7 @@ import { useAppSelector } from "../redux/hook";
 import { useCurrentUser } from "../redux/features/auth/authSlice";
 import { TUser } from "../utils/Type";
 import { useCreateOrderMutation } from "../redux/features/Products/productApi";
+import { toast } from "sonner";
 
 const { Option } = Select;
 
@@ -44,13 +45,30 @@ const Checkout = () => {
           window.location.href = paymentUrl;
         }, 1000);
       }else{
+        toast.error("Something went wrong", {
+          duration: 5000,
+          position: 'bottom-center',
+          style: {
+            backgroundColor: 'red',
+            color: 'white',
+          },  
+        });
         console.log(error)
         setLoading(false);
       }
       console.log(res)
     }
-    catch(error){
-      console.log(error)
+    catch(error: any){
+
+      toast.error( error?.data?.message || "Something went wrong", {
+        duration: 5000,
+        position: 'bottom-center',
+        style: {
+          backgroundColor: 'red',
+          color: 'white',
+        },  
+      });
+      setLoading(false);
     }
   };
 
