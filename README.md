@@ -1,50 +1,77 @@
-# React + TypeScript + Vite
+# Car Store App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to my Car Store Application – a robust, scalable, and feature-rich web platform designed to provide a seamless car purchasing experience. Users can browse and purchase cars effortlessly, update their profiles, and complete transactions with secure payment integration.
 
-Currently, two official plugins are available:
+For administrators, the platform offers powerful management tools, including order tracking, user management, and product inventory control. Admins can upload and update car listings, manage customer orders, and oversee the entire sales process efficiently.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+With a user-friendly interface and a streamlined workflow, our application ensures a smooth experience for both customers and administrators.
 
-## Expanding the ESLint configuration
+## Features 
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### For Customers:
+    - Car Browsing & Purchase – Explore a wide range of cars and place orders seamlessly.
+    - Secure Payment Integration – Complete transactions safely with multiple payment options.
+    - Profile Management – Update personal details, and more
+### For Admins:
+    - Order Management – View, process, and manage customer orders efficiently.
+    - User Management – Add, update, or remove users and control access levels.
+    - Product Management – Upload, edit, and delete car listings with detailed specifications.
+### Additional Features:
+    - Scalable & Secure Architecture – Designed to handle growth while ensuring data security.
+    - Responsive Design – Works seamlessly on desktops, tablets, and mobile devices.
 
-- Configure the top-level `parserOptions` property like this:
+### Error Handling
+you can get a consistant error response with a details of each errors.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
+## Getting Started
+Follow these instructions to set up the project locally.
+
+### Prerequisites
+Make sure you have the following installed:
+
+ - React
+ - Redux
+ - Ant design
+ - react router dom
+
+use a package manager such as (npm, yarn)
+
+also use "typescript" for devDependencies. 
+
+here is the all dependency lists with versions
+
+"dependencies": {
+    "@ant-design/icons": "^5.6.0",
+    "@reduxjs/toolkit": "^2.5.1",
+    "antd": "^5.23.3",
+    "axios": "^1.7.9",
+    "jwt-decode": "^4.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.54.2",
+    "react-redux": "^9.2.0",
+    "react-responsive": "^10.0.0",
+    "react-router-dom": "^7.1.5",
+    "redux-persist": "^6.0.0",
+    "sonner": "^1.7.4"
   },
-})
-```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### Installation guide
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+Here is github repositories link : https://github.com/Ridwan-Suhel/car-store-app-client
+please use: git clone https://github.com/Ridwan-Suhel/car-store-app-client.git
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+then install npm: npm install
+
+Setup .env file in locally  
+
+use "npm run start" to run the server
+
+### About Me 🙋‍♂️
+Hi! My name is **Ridwan Suhel**. I'm a passionate developer who loves creating efficient and user-friendly solutions. This project reflects my skills in backend development and API design.
+
+### Links 🔗
+- **GitHub Repository**: [Car Store App Client Github Repo](https://github.com/Ridwan-Suhel/car-store-app-client)
+- **GitHub Repository**: [Car Store App Api Github Repo](https://github.com/Ridwan-Suhel/car-store-api)
+- **Live API**: [Car Store API on Vercel](https://car-store-api.vercel.app)
+- **Live WEBSITE**: [Car Store live app](https://carnest-ashy.vercel.app)
